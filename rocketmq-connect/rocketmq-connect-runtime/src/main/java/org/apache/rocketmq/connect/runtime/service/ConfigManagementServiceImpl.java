@@ -135,7 +135,7 @@ public class ConfigManagementServiceImpl implements ConfigManagementService {
         if (connectConfig.getIsLeader() == 1) {
             log.info("This worker is a leader, leaderID is " + connectConfig.getWorkerID());
             connectConfig.setLeaderID(connectConfig.getWorkerID());
-            sendOnlineConfig();
+            //sendOnlineConfig();
         }
         else {
             if (connectConfig.getLeaderID() != null) {

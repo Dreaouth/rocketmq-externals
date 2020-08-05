@@ -126,7 +126,7 @@ public class FileSourceTask extends SourceTask {
             int nread = 0;
             while (readerCopy.ready()) {
                 nread = readerCopy.read(buffer, offset, buffer.length - offset);
-                log.trace("Read {} bytes from {}", nread, logFilename());
+                log.debug("Read {} bytes from {}", nread, logFilename());
 
                 if (nread > 0) {
                     offset += nread;
@@ -140,7 +140,7 @@ public class FileSourceTask extends SourceTask {
                     do {
                         line = extractLine();
                         if (line != null) {
-                            log.trace("Read a line from {}", logFilename());
+                            log.debug("Read a line from {}", logFilename());
                             if (records == null) {
                                 records = new ArrayList<>();
                             }
@@ -229,12 +229,12 @@ public class FileSourceTask extends SourceTask {
     }
 
     @Override public void stop() {
-        log.trace("Stopping");
+        log.debug("Stopping FileSourceTask");
         synchronized (this) {
             try {
                 if (stream != null && stream != System.in) {
                     stream.close();
-                    log.trace("Closed input stream");
+                    log.debug("Closed input stream");
                 }
             } catch (IOException e) {
                 log.error("Failed to close FileStreamSourceTask stream: ", e);

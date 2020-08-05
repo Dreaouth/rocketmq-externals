@@ -33,6 +33,7 @@ import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.connect.runtime.common.LoggerName;
 import org.apache.rocketmq.connect.runtime.config.ConnectConfig;
 import org.apache.rocketmq.connect.runtime.utils.ConnectUtil;
@@ -105,6 +106,7 @@ public class BrokerBasedLog<K, V> implements DataSynchronizer<K, V> {
         this.consumer.setConsumeTimeout((long) connectConfig.getRmqMessageConsumeTimeout());
         this.consumer.setConsumeThreadMin(connectConfig.getRmqMinConsumeThreadNums());
         this.consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+        this.consumer.setMessageModel(MessageModel.BROADCASTING);
         this.keyConverter = keyConverter;
         this.valueConverter = valueConverter;
     }
@@ -138,7 +140,7 @@ public class BrokerBasedLog<K, V> implements DataSynchronizer<K, V> {
             }
             producer.send(new Message(topicName, messageBody), new SendCallback() {
                 @Override public void onSuccess(org.apache.rocketmq.client.producer.SendResult result) {
-                    log.info("Send async message OK, msgId: {}", result.getMsgId());
+                    log.info("Send async message OK, msgId: {},offset: {}, {}", result.getMsgId(), result.getQueueOffset(), topicName);
                 }
 
                 @Override public void onException(Throwable throwable) {
@@ -180,7 +182,7 @@ public class BrokerBasedLog<K, V> implements DataSynchronizer<K, V> {
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> rmqMsgList,
             ConsumeConcurrentlyContext context) {
             for (MessageExt messageExt : rmqMsgList) {
-                log.info("Received one message: {}", messageExt.getMsgId() + "\n");
+                log.info("Received one message: {}, offset:{}, {}", messageExt.getMsgId(), messageExt.getQueueOffset(), topicName);
                 byte[] bytes = messageExt.getBody();
                 Map<K, V> map;
                 try {

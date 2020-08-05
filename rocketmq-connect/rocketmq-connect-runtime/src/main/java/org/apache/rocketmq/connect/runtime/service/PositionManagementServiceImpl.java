@@ -72,7 +72,7 @@ public class PositionManagementServiceImpl implements PositionManagementService 
 
         positionStore.load();
         dataSynchronizer.start();
-        sendOnlinePositionInfo();
+        //sendOnlinePositionInfo();
     }
 
     @Override

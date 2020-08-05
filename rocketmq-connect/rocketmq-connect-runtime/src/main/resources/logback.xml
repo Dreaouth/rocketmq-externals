@@ -90,7 +90,6 @@
         <appender-ref ref="FileConnectorAppender"/>
         <appender-ref ref="Console" />
     </logger>
-
     <logger name="RocketMQRuntime" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="RocketMQRuntimeAppender"/>

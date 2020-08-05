@@ -72,7 +72,7 @@ public class OffsetManagementServiceImpl implements PositionManagementService {
 
         offsetStore.load();
         dataSynchronizer.start();
-        sendOnlineOffsetInfo();
+        //sendOnlineOffsetInfo();
     }
 
     @Override
